@@ -7,19 +7,50 @@
             <base-spinner></base-spinner>
         </base-dialog>
         <base-card>
-            <form @submit.prevent="submitForm">
-                <div class="form-control">
-                    <label for="email">E-Mail</label>
-                    <input v-model.trim="email" type="email" id="email">
-                </div>
-                <div class="form-control">
-                    <label for="password">Password</label>
-                    <input v-model.trim="password" type="password" id="password">
-                </div>
-                <p v-if="!formIsValid">Please enter a valid email and password (must be at least 6 characters long).</p>
-                <base-button>{{ submitButtonCaption }}</base-button>
-                <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
-            </form>
+            <transition name="loginform" mode="out-in">
+                <form v-if="mode === 'login'" @submit.prevent="submitForm">
+                    <div class="form-control">
+                        <label for="email">E-Mail</label>
+                        <input v-model.trim="email" type="email" id="email">
+                    </div>
+                    <div class="form-control">
+                        <label for="password">Password</label>
+                        <input v-model.trim="password" type="password" id="password">
+                    </div>
+                    <p v-if="!formIsValid">Please enter a valid email and password (must be at least 6 characters long).</p>
+                    <base-button>{{ submitButtonCaption }}</base-button>
+                    <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
+                </form>
+                <form v-else-if="mode === 'signup'" @submit.prevent="submitForm">
+                    <div class="form-control">
+                        <label for="name">Name</label>
+                        <input v-model.trim="name" type="text" id="name" :class="{ 'invalid-input': !formIsValid.name }">
+                        <small v-if="!formIsValid.name" class="invalid-message">Cannot be empty.</small>
+                    </div>
+                    <div class="form-control">
+                        <label for="date">Birth Date</label>
+                        <input v-model.trim="birthDay" type="date" id="date" :max="today" :class="{ 'invalid-input': !formIsValid.birthDay }">
+                        <small v-if="!formIsValid.birthDay" class="invalid-message">You must inform your birthday.</small>
+                    </div>
+                    <div class="form-control">
+                        <label for="email">E-Mail</label>
+                        <input v-model.trim="email" type="email" id="email" :class="{ 'invalid-input': !formIsValid.email }">
+                        <small v-if="!formIsValid.email" class="invalid-message">Invalid email.</small>
+                    </div>
+                    <div class="form-control">
+                        <label for="password">Password</label>
+                        <small :class="{ 'invalid-message': !formIsValid.password }">Must be between 8 and 16 characters and contain at least one number.</small>
+                        <input v-model.trim="password" type="password" id="password" :class="{ 'invalid-input': !formIsValid.password }">
+                    </div>
+                    <div class="form-control">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input v-model.trim="confirmPassword" type="password" id="confirmPassword" :class="{ 'invalid-input': !formIsValid.confirmPassword }">
+                        <small v-if="!formIsValid.confirmPassword" class="invalid-message">Both passwords must match.</small>
+                    </div>
+                    <base-button>{{ submitButtonCaption }}</base-button>
+                    <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
+                </form>
+            </transition>
         </base-card>
     </div>
 </template>
@@ -28,9 +59,18 @@
 export default {
     data() {
         return {
+            name: '',
+            birthDay: '',
             email: '',
             password: '',
-            formIsValid: true,
+            confirmPassword: '',
+            formIsValid: {
+                name: true,
+                birthDay: true,
+                email: true,
+                password: true,
+                confirmPassword: true
+            },
             mode: 'login',
             isLoading: false,
             error: null
@@ -50,17 +90,50 @@ export default {
             } else {
                 return 'Login instead!';
             }
+        },
+        today() {
+            const currentDay = new Date();
+            const dd = currentDay.getDate() < 10 ? '0' + currentDay.getDate() : currentDay.getDate();
+            const mm = currentDay.getMonth()+1 < 10 ? '0' + (currentDay.getMonth()+1) : currentDay.getMonth()+1;
+            const yyyy = currentDay.getFullYear();
+
+            return `${yyyy}-${mm}-${dd}`;
         }
     },
     methods: {
-        async submitForm() {
-            this.formIsValid = true;
-            if(
-                this.email === '' ||
-                !this.email.includes('@') ||
-                this.password.length < 6
-            ) {
-                this.formIsValid = false;
+        async submitForm() {            
+            this.formIsValid = {
+                name: true,
+                birthDay: true,
+                email: true,
+                password: true,
+                confirmPassword: true
+            };
+
+            let hasInvalidInput = false;
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if(!this.email || !re.test(String(this.email).toLowerCase())) {
+                this.formIsValid.email = false;
+                hasInvalidInput = true;
+            }
+            if(this.name === '') {
+                this.formIsValid.name = false;
+                hasInvalidInput = true;
+            }
+            if(!this.birthDay) {
+                this.formIsValid.birthDay = false;
+                hasInvalidInput = true;
+            }
+            if(this.password.length < 8 || this.password.length > 16 || !/\d/.test(this.password)) {
+                this.formIsValid.password = false;
+                hasInvalidInput = true;
+            }
+            if(this.password !== this.confirmPassword) {
+                this.formIsValid.confirmPassword = false;
+                hasInvalidInput = true;
+            }
+
+            if(hasInvalidInput) {
                 return;
             }
 
@@ -128,5 +201,37 @@ textarea:focus {
   border-color: #3d008d;
   background-color: #faf6ff;
   outline: none;
+}
+
+.invalid-message {
+    color: red
+}
+
+.invalid-input {
+    border-color: red
+}
+
+.loginform-enter-from {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.loginform-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+.loginform-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.loginform-leave-active {
+    transition: all 0.3s ease-in;
+}
+
+.loginform-enter-to,
+.loginform-leave-from {
+    opacity: 1;
+    transform: translateX(0);
 }
 </style>
