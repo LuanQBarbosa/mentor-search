@@ -27,7 +27,13 @@ export default {
         const responseData = await response.json();
 
         if(!response.ok) {
-            const error = new Error(responseData.message || 'Failed to autheticate. Check your login data.');
+            console.log(responseData);
+            let error = null;
+            if(responseData.error.message === 'EMAIL_EXISTS') {
+                error = new Error('Email already registered.');
+            } else {
+                error = new Error(responseData.message || 'Failed to autheticate. Check your login data.');
+            }
             throw error;
         }
 

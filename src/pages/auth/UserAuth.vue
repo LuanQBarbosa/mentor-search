@@ -11,11 +11,11 @@
                 <form v-if="mode === 'login'" @submit.prevent="submitForm">
                     <div class="form-control">
                         <label for="email">E-Mail</label>
-                        <input v-model.trim="email" type="email" id="email">
+                        <input v-model.trim="loginEmail" type="email" id="email">
                     </div>
                     <div class="form-control">
                         <label for="password">Password</label>
-                        <input v-model.trim="password" type="password" id="password">
+                        <input v-model.trim="loginPassword" type="password" id="password">
                     </div>
                     <p v-if="!formIsValid">Please enter a valid email and password (must be at least 6 characters long).</p>
                     <base-button>{{ submitButtonCaption }}</base-button>
@@ -71,6 +71,8 @@ export default {
                 password: true,
                 confirmPassword: true
             },
+            loginEmail: '',
+            loginPassword: '',
             mode: 'login',
             isLoading: false,
             error: null
@@ -101,45 +103,47 @@ export default {
         }
     },
     methods: {
-        async submitForm() {            
-            this.formIsValid = {
-                name: true,
-                birthDay: true,
-                email: true,
-                password: true,
-                confirmPassword: true
-            };
-
-            let hasInvalidInput = false;
-            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if(!this.email || !re.test(String(this.email).toLowerCase())) {
-                this.formIsValid.email = false;
-                hasInvalidInput = true;
-            }
-            if(this.name === '') {
-                this.formIsValid.name = false;
-                hasInvalidInput = true;
-            }
-            if(!this.birthDay) {
-                this.formIsValid.birthDay = false;
-                hasInvalidInput = true;
-            }
-            if(this.password.length < 8 || this.password.length > 16 || !/\d/.test(this.password)) {
-                this.formIsValid.password = false;
-                hasInvalidInput = true;
-            }
-            if(this.password !== this.confirmPassword) {
-                this.formIsValid.confirmPassword = false;
-                hasInvalidInput = true;
-            }
-
-            if(hasInvalidInput) {
-                return;
-            }
+        async submitForm() { 
+            if(this.mode === 'signup') {
+                this.formIsValid = {
+                    name: true,
+                    birthDay: true,
+                    email: true,
+                    password: true,
+                    confirmPassword: true
+                };
+    
+                let hasInvalidInput = false;
+                const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                if(!this.email || !re.test(String(this.email).toLowerCase())) {
+                    this.formIsValid.email = false;
+                    hasInvalidInput = true;
+                }
+                if(this.name === '') {
+                    this.formIsValid.name = false;
+                    hasInvalidInput = true;
+                }
+                if(!this.birthDay) {
+                    this.formIsValid.birthDay = false;
+                    hasInvalidInput = true;
+                }
+                if(this.password.length < 8 || this.password.length > 16 || !/\d/.test(this.password)) {
+                    this.formIsValid.password = false;
+                    hasInvalidInput = true;
+                }
+                if(this.password !== this.confirmPassword) {
+                    this.formIsValid.confirmPassword = false;
+                    hasInvalidInput = true;
+                }
+    
+                if(hasInvalidInput) {
+                    return;
+                }
+            }          
 
             const actionPayload = {
-                email: this.email,
-                password: this.password
+                email: this.mode === 'login' ? this.loginEmail : this.email,
+                password: this.mode === 'login' ? this.loginPassword : this.password
             }
 
             this.isLoading = true;
