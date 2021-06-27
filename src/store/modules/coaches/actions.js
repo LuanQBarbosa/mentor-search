@@ -2,10 +2,11 @@ export default {
     async registerCoach(context, data) {
         const userId = context.rootGetters.userId;
         const token = context.rootGetters.token;
+        const userData = context.rootGetters.userData;
 
         const coachData = {
-            firstName: data.first,
-            lastName: data.last,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
             description: data.desc,
             hourlyRate: data.rate,
             areas: data.areas

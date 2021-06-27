@@ -23,9 +23,14 @@
                 </form>
                 <form v-else-if="mode === 'signup'" @submit.prevent="submitForm">
                     <div class="form-control">
-                        <label for="name">Name</label>
-                        <input v-model.trim="name" type="text" id="name" :class="{ 'invalid-input': !formIsValid.name }">
-                        <small v-if="!formIsValid.name" class="invalid-message">Cannot be empty.</small>
+                        <label for="firstName">First Name</label>
+                        <input v-model.trim="firstName" type="text" id="firstName" :class="{ 'invalid-input': !formIsValid.firstName }">
+                        <small v-if="!formIsValid.firstName" class="invalid-message">Cannot be empty.</small>
+                    </div>
+                    <div class="form-control">
+                        <label for="lastName">Last Name</label>
+                        <input v-model.trim="lastName" type="text" id="lastName" :class="{ 'invalid-input': !formIsValid.lastName }">
+                        <small v-if="!formIsValid.lastName" class="invalid-message">Cannot be empty.</small>
                     </div>
                     <div class="form-control">
                         <label for="date">Birth Date</label>
@@ -59,13 +64,15 @@
 export default {
     data() {
         return {
-            name: '',
+            firstName: '',
+            lastName: '',
             birthDay: '',
             email: '',
             password: '',
             confirmPassword: '',
             formIsValid: {
-                name: true,
+                firstName: true,
+                lastName: true,
                 birthDay: true,
                 email: true,
                 password: true,
@@ -104,9 +111,11 @@ export default {
     },
     methods: {
         async submitForm() { 
+            let userData = null;
             if(this.mode === 'signup') {
                 this.formIsValid = {
-                    name: true,
+                    firstName: true,
+                    lastName: true,
                     birthDay: true,
                     email: true,
                     password: true,
@@ -119,8 +128,12 @@ export default {
                     this.formIsValid.email = false;
                     hasInvalidInput = true;
                 }
-                if(this.name === '') {
-                    this.formIsValid.name = false;
+                if(this.firstName === '') {
+                    this.formIsValid.firstName = false;
+                    hasInvalidInput = true;
+                }
+                if(this.lastName === '') {
+                    this.formIsValid.lastName = false;
                     hasInvalidInput = true;
                 }
                 if(!this.birthDay) {
@@ -139,11 +152,19 @@ export default {
                 if(hasInvalidInput) {
                     return;
                 }
+
+                userData = {
+                    firstName: this.firstName,
+                    lastName: this.lastName,
+                    birthDay: this.birthDay,
+                    email: this.email
+                }
             }          
 
             const actionPayload = {
                 email: this.mode === 'login' ? this.loginEmail : this.email,
-                password: this.mode === 'login' ? this.loginPassword : this.password
+                password: this.mode === 'login' ? this.loginPassword : this.password,
+                userData
             }
 
             this.isLoading = true;

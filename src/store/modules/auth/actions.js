@@ -37,6 +37,18 @@ export default {
             throw error;
         }
 
+        let userData = null;
+        if(mode === 'login') {
+            const newResponse = await fetch(`https://vue-http-demo-6c0d1-default-rtdb.firebaseio.com/users/${responseData.localId}.json`);
+            userData = await newResponse.json();
+        } else {
+            await fetch(`https://vue-http-demo-6c0d1-default-rtdb.firebaseio.com/users/${responseData.localId}.json?auth=${responseData.idToken}`, {
+                method: 'PUT',
+                body: JSON.stringify(payload.userData)
+            });
+            userData = payload.userData;
+        }
+
         const expiresIn = +responseData.expiresIn * 1000;
         const expirationDate = new Date().getTime() + expiresIn;
 
@@ -50,7 +62,8 @@ export default {
 
         context.commit('setUser', {
             token: responseData.idToken,
-            userId: responseData.localId
+            userId: responseData.localId,
+            userData: userData
         });
     },
     tryLogin(context) {
