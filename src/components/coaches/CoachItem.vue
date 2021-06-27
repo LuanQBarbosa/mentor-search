@@ -13,7 +13,7 @@
             </base-badge>
         </div>
         <div class="actions">
-            <base-button :to="coachContactLink" mode="outline" link>Contact</base-button>
+            <!-- <base-button :to="coachContactLink" mode="outline" link>Contact</base-button> -->
             <base-button :to="coachDetailsLink" link>View Details</base-button>
         </div>
     </li>
