@@ -1,9 +1,9 @@
 <template>
     <form @submit.prevent="submitForm">
-        <div class="form-control">
+        <!-- <div class="form-control">
             <label for="email">Your E-Mail</label>
             <input type="email" id="email" v-model.trim="email">
-        </div>
+        </div> -->
         <div class="form-control">
             <label for="message">Message</label>
             <textarea id="message" rows="5" v-model.trim="message"></textarea>
@@ -19,7 +19,7 @@
 export default {
     data() {
         return {
-            email: '',
+            // email: '',
             message: '',
             formIsValid: true
         }
@@ -27,14 +27,19 @@ export default {
     methods: {
         submitForm() {
             this.formIsValid = true;
-            if(this.email === '' || !this.email.includes('@') || this.message === '') {
+            // if(this.email === '' || !this.email.includes('@') || this.message === '') {
+            //     this.formIsValid = false;
+            //     return;
+            // }
+            if(this.message === '') {
                 this.formIsValid = false;
                 return;
             }
 
             this.$store.dispatch('requests/contactCoach', {
                 coachId: this.$route.params.id,
-                email: this.email,
+                type: 'message',
+                // email: this.email,
                 message: this.message
             });
 

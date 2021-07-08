@@ -5,11 +5,13 @@ export default {
         const userData = context.rootGetters.userData;
 
         const coachData = {
-            firstName: userData.firstName,
-            lastName: userData.lastName,
+            firstName: data.firstName || userData.firstName,
+            lastName: data.lastName || userData.lastName,
             description: data.desc,
             hourlyRate: data.rate,
-            areas: data.areas
+            areas: data.areas,
+            studentsList: data.studentsList || [],
+            reviewsList: data.reviewsList || []
         };
 
         const response = await fetch(`https://vue-http-demo-6c0d1-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=${token}`, {
@@ -48,7 +50,9 @@ export default {
                 lastName: responseData[key].lastName,
                 description: responseData[key].description,
                 hourlyRate: responseData[key].hourlyRate,
-                areas: responseData[key].areas
+                areas: responseData[key].areas,
+                studentsList: responseData[key].studentsList || [],
+                reviewsList: responseData[key].reviewsList || []
             };
             coaches.push(coach);
         }

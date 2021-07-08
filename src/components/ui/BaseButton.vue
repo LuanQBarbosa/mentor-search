@@ -64,6 +64,14 @@ button:active {
   color: #270041;
 }
 
+.danger {
+  background-color: rgb(229, 59, 59);
+}
+
+.success {
+  background-color: rgb(43, 168, 43);
+}
+
 .flat:hover,
 .flat:active,
 .outline:hover,
