@@ -5,6 +5,7 @@ import CoachDetails from './pages/coaches/CoachDetails.vue';
 import CoachRegistration from './pages/coaches/CoachRegistration.vue';
 import ContactCoach from './pages/requests/ContactCoach.vue';
 import RequestsReceived from './pages/requests/RequestsReceived.vue';
+import MessagesReceived from './pages/requests/MessagesReceived.vue';
 import UserAuth from './pages/auth/UserAuth.vue';
 import NotFound from './pages/NotFound.vue';
 import store from './store/index';
@@ -24,6 +25,7 @@ const router = createRouter({
         },
         { path: '/register', component: CoachRegistration, meta: { requiresAuth: true } },
         { path: '/requests', component: RequestsReceived, meta: { requiresAuth: true } },
+        { path: '/messages', component: MessagesReceived, meta: { requiresAuth: true } },
         { path: '/auth', component: UserAuth, meta: { requiresUnauth: true } },
         { path: '/:notFound(.*)', component: NotFound }
     ]

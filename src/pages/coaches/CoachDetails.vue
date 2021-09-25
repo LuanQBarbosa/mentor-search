@@ -5,7 +5,7 @@
                 <div class="mentor-name">
                     <h2>{{ fullName }}</h2>
                     <transition name="fade">
-                        <base-button v-if="showRequestButton" @click="sendMentorshipRequest">Request Mentorshipt!</base-button>
+                        <base-button v-if="showRequestButton" @click="sendMentorshipRequest">Request Mentorship!</base-button>
                     </transition>
                 </div>
                 <h3>${{ rate }}/hour</h3>
@@ -144,6 +144,7 @@ export default {
             reviewsList.push(review);
 
             const data = {
+                coachId: this.id,
                 firstName: this.selectedCoach.firstName,
                 lastName: this.selectedCoach.lastName,
                 desc: this.selectedCoach.description,

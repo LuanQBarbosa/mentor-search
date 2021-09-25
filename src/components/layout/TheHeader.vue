@@ -1,13 +1,19 @@
 <template>
     <header>
         <nav>
-            <h1><router-link to="/">Find a Coach</router-link></h1>
+            <h1 style="display:flex; align-items: center">
+              <img src="../../mentoria-731x731.png" style="max-width: 60px" />
+              <router-link to="/">Find a Coach</router-link>
+            </h1>
             <ul>
                 <li>
                   <router-link to="/coaches">All Coaches</router-link>
                 </li>
                 <li v-if="isLoggedIn">
                   <router-link to="/requests">Requests</router-link>
+                </li>
+                <li v-if="isLoggedIn">
+                  <router-link to="/messages">Messages</router-link>
                 </li>
                 <li v-else>
                   <router-link to="/auth">Login</router-link>
@@ -48,7 +54,7 @@ header {
 
 header a {
   text-decoration: none;
-  color: #f391e3;
+  color: #fff;
   display: inline-block;
   padding: 0.75rem 1.5rem;
   border: 1px solid transparent;
@@ -57,7 +63,7 @@ header a {
 a:active,
 a:hover,
 a.router-link-active {
-  border: 1px solid #f391e3;
+  border: 1px solid #fff;
 }
 
 h1 {

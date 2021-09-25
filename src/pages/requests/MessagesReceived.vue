@@ -6,12 +6,12 @@
         <section>
             <base-card>
                 <header>
-                    <h2>Request Received</h2>
+                    <h2>Messages Received</h2>
                 </header>
                 <base-spinner v-if="isLoading"></base-spinner>
                 <ul v-else-if="hasRequests && !isLoading">
                     <template v-for="req in receivedRequests">
-                        <!-- <request-item
+                        <request-item
                             v-if="req.type === 'message'"
                             :key="req.id"
                             :email="req.userEmail"
@@ -20,9 +20,9 @@
                             :id="req.id"
                             @isLoading="isLoading = true"
                             @finishedLoading="isLoading = false"
-                        ></request-item> -->
-                        <request-item
-                            v-if="req.type === 'mentorship'"
+                        ></request-item>
+                        <!-- <request-item
+                            v-else
                             :key="req.id"
                             :email="req.userEmail"
                             :name="req.userName"
@@ -31,7 +31,7 @@
                             :id="req.id"
                             @isLoading="isLoading = true"
                             @finishedLoading="isLoading = false"
-                        ></request-item>
+                        ></request-item> -->
                     </template>
                     <!-- <request-item
                         v-for="req in receivedRequests"
@@ -41,7 +41,7 @@
                         :id="req.id"
                     ></request-item> -->
                 </ul>
-                <h3 v-else>You haven't received any requests yet!</h3>
+                <h3 v-else>You haven't received any messages yet!</h3>
             </base-card>
         </section>
     </div>

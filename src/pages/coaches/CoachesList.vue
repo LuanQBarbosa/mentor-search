@@ -58,6 +58,9 @@ export default {
                 if(this.activeFilters.coachName && !coachName.includes(this.activeFilters.coachName.toLowerCase())) {
                     return false;
                 }
+                if(coach.id === this.$store.getters.userId) {
+                    return false;
+                }
                 if(this.activeFilters.frontend && coach.areas.includes('frontend')) {
                     return true;
                 }

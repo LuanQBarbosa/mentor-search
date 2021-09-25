@@ -34,7 +34,7 @@
                     </div>
                     <div class="form-control">
                         <label for="date">Birth Date</label>
-                        <input v-model.trim="birthDay" type="date" id="date" :max="today" :class="{ 'invalid-input': !formIsValid.birthDay }">
+                        <input v-model.trim="birthDay" type="date" id="date" max="2003-12-31" :class="{ 'invalid-input': !formIsValid.birthDay }">
                         <small v-if="!formIsValid.birthDay" class="invalid-message">You must inform your birthday.</small>
                     </div>
                     <div class="form-control">
